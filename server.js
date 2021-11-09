@@ -26,6 +26,7 @@ async function run() {
         const database = client.db("Services");
         const serviceCollection = database.collection("name");
         const userCollection = database.collection("user");
+        const ratingCollection = database.collection("rating");
 
         //DATA
 
@@ -65,6 +66,20 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await userCollection.findOne(query)
+            res.send(result);
+        })
+
+        //Rating
+
+        app.post('/rating', async (req, res) => {
+            const rating = req.body;
+            const result = await ratingCollection.insertOne(rating)
+            res.json(result);
+        })
+
+        app.get('/rating', async (req, res) => {
+            const cursor = ratingCollection.find({})
+            const result = await cursor.toArray()
             res.send(result);
         })
 
