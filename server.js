@@ -27,6 +27,7 @@ async function run() {
         const serviceCollection = database.collection("name");
         const userCollection = database.collection("user");
         const ratingCollection = database.collection("rating");
+        const AdminAndUserCollection = database.collection("AdminAndUser");
 
         //DATA
 
@@ -49,7 +50,25 @@ async function run() {
             res.send(result);
         })
 
-        //USer
+        // User Collection
+
+
+        app.post('/user', async (req, res) => {
+            const user = req.body;
+            const result = await AdminAndUserCollection.insertOne(user);
+            res.json(result);
+        })
+
+        app.put('/user', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await AdminAndUserCollection.updateOne(filter, updateDoc, options);
+            res.json(result)
+        })
+
+        //USers Order
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -89,7 +108,39 @@ async function run() {
             res.send(result);
         })
 
+        // // Make Admin
 
+
+        // app.get('/users/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const user = await usersCollection.findOne(query);
+        //     let isAdmin = false;
+        //     if (user?.role === 'admin') {
+        //         isAdmin = true;
+        //     }
+        //     res.json({ admin: isAdmin });
+        // })
+
+
+
+        // app.put('/users/admin', verifyToken, async (req, res) => {
+        //     const user = req.body;
+        //     const requester = req.decodedEmail;
+        //     if (requester) {
+        //         const requesterAccount = await usersCollection.findOne({ email: requester });
+        //         if (requesterAccount.role === 'admin') {
+        //             const filter = { email: user.email };
+        //             const updateDoc = { $set: { role: 'admin' } };
+        //             const result = await usersCollection.updateOne(filter, updateDoc);
+        //             res.json(result);
+        //         }
+        //     }
+        //     else {
+        //         res.status(403).json({ message: 'you do not have access to make admin' })
+        //     }
+
+        // })
 
 
         app.listen(port, () => {
