@@ -52,6 +52,17 @@ async function run() {
 
         // User Collection
 
+        app.get('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await AdminAndUserCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
+
 
         app.post('/user', async (req, res) => {
             const user = req.body;
@@ -67,6 +78,14 @@ async function run() {
             const result = await AdminAndUserCollection.updateOne(filter, updateDoc, options);
             res.json(result)
         })
+
+        app.put('/user/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email }
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await AdminAndUserCollection.updateOne(filter, updateDoc);
+            res.send(result)
+        });
 
         //USers Order
 
