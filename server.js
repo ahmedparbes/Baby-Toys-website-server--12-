@@ -2,7 +2,7 @@ const express = require('express')
 const { MongoClient } = require('mongodb');
 var cors = require('cors')
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 //handleDynamic
 const ObjectId = require('mongodb').ObjectId;
@@ -19,6 +19,7 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.9z7i3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+console.log(uri)
 
 
 async function run() {
